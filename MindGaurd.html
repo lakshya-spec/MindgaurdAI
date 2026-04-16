@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindGuard - Mental Health Companion</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .section-title {
+            color: #333;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            margin-top: 25px;
+        }
+
+        .mood-selector {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .mood-btn {
+            background: #f5f5f5;
+            border: 2px solid transparent;
+            border-radius: 15px;
+            padding: 15px;
+            font-size: 32px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mood-btn:hover {
+            transform: scale(1.1);
+            background: #efefef;
+        }
+
+        .mood-btn.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+            transform: scale(1.15);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.3s ease;
+            color: #333;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-section {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9ff;
+            border-radius: 15px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .result-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-title {
+            color: #667eea;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .result-item {
+            margin-bottom: 15px;
+        }
+
+        .result-label {
+            color: #666;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .mood-display {
+            text-align: center;
+            font-size: 48px;
+            margin: 10px 0;
+        }
+
+        .stress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .stress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .suggestion-box {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .suggestion-box p {
+            color: #333;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .clear-btn {
+            width: 100%;
+            padding: 12px;
+            background: #f0f0f0;
+            color: #333;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .clear-btn:hover {
+            background: #e0e0e0;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .mood-selector {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 10px;
+            }
+
+            .mood-btn {
+                padding: 12px;
+                font-size: 28px;
+            }
+
+            textarea {
+                min-height: 80px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧠 MindGuard</h1>
+            <p class="subtitle">Your daily mental health companion</p>
+        </header>
+
+        <form id="moodForm">
+            <div>
+                <p class="section-title">How are you feeling?</p>
+                <div class="mood-selector">
+                    <button type="button" class="mood-btn" data-mood="happy" data-stress="20" title="Happy">😊</button>
+                    <button type="button" class="mood-btn" data-mood="neutral" data-stress="40" title="Neutral">😐</button>
+                    <button type="button" class="mood-btn" data-mood="sad" data-stress="60" title="Sad">😢</button>
+                    <button type="button" class="mood-btn" data-mood="anxious" data-stress="75" title="Anxious">😰</button>
+                    <button type="button" class="mood-btn" data-mood="stressed" data-stress="90" title="Stressed">😫</button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <p class="section-title">Tell me about your day</p>
+                <textarea 
+                    id="dayInput" 
+                    placeholder="Share what's on your mind... This helps me understand your situation better."
+                    required
+                ></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">Get Suggestion</button>
+        </form>
+
+        <div class="result-section" id="resultSection">
+            <div class="result-title">Your Mental Health Overview</div>
+
+            <div class="result-item">
+                <div class="result-label">Current Mood</div>
+                <div class="mood-display" id="moodEmoji">😊</div>
+            </div>
+
+            <div class="result-item">
+                <div class="result-label">Stress Level</div>
+                <div class="stress-bar">
+                    <div class="stress-fill" id="stressFill"></div>
+                </div>
+                <div class="result-value" id="stressText">20%</div>
+            </div>
+
+            <div class="result-item">
+                <div class="result-label">Personalized Suggestion</div>
+                <div class="suggestion-box">
+                    <p id="suggestionText"></p>
+                </div>
+            </div>
+
+            <button type="button" class="clear-btn" id="clearBtn">Start Over</button>
+        </div>
+    </div>
+
+    <script>
+        const moodButtons = document.querySelectorAll('.mood-btn');
+        const dayInput = document.getElementById('dayInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const resultSection = document.getElementById('resultSection');
+        const moodEmoji = document.getElementById('moodEmoji');
+        const stressFill = document.getElementById('stressFill');
+        const stressText = document.getElementById('stressText');
+        const suggestionText = document.getElementById('suggestionText');
+        const clearBtn = document.getElementById('clearBtn');
+        const form = document.getElementById('moodForm');
+
+        let selectedMood = null;
+        let selectedStress = null;
+
+        // Mood selection logic
+        moodButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                moodButtons.forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                
+                selectedMood = btn.dataset.mood;
+                selectedStress = parseInt(btn.dataset.stress);
+                moodEmoji.textContent = btn.textContent;
+            });
+        });
+
+        // Form submission
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            if (!selectedMood) {
+                alert('Please select a mood first!');
+                return;
+            }
+
+            const dayText = dayInput.value.trim();
+            if (!dayText) {
+                alert('Please tell me about your day!');
+                return;
+            }
+
+            // Update results
+            stressFill.style.width = selectedStress + '%';
+            stressText.textContent = selectedStress + '%';
+
+            const suggestion = generateSuggestion(selectedMood, selectedStress, dayText);
+            suggestionText.textContent = suggestion;
+
+            // Show result section
+            resultSection.classList.add('active');
+            resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        // Clear button
+        clearBtn.addEventListener('click', () => {
+            form.reset();
+            moodButtons.forEach(btn => btn.classList.remove('selected'));
+            dayInput.value = '';
+            resultSection.classList.remove('active');
+            selectedMood = null;
+            selectedStress = null;
+            moodEmoji.textContent = '😊';
+        });
+
+        // Suggestion generation based on mood and input
+        function generateSuggestion(mood, stress, text) {
+            const suggestions = {
+                happy: [
+                    "Great to hear you're feeling happy! Keep up the positive energy by sharing your joy with others.",
+                    "You're in a wonderful mood! This is a perfect time to tackle challenging tasks and help others.",
+                    "Wonderful! Channel this happiness into creative projects or spend quality time with loved ones.",
+                ],
+                neutral: [
+                    "You're feeling neutral. Take a moment to reflect on what could brighten your day.",
+                    "It's okay to feel neutral. Try something new or reconnect with an old hobby.",
+                    "Neutral moods are perfect for self-reflection. What's one small thing that could improve your day?",
+                ],
+                sad: [
+                    "I sense sadness. Remember that it's okay to feel this way. Consider reaching out to someone you trust.",
+                    "Sadness is a natural emotion. Try gentle self-care like a warm bath, journaling, or a walk in nature.",
+                    "It's important to acknowledge your sadness. Speaking with someone or doing something comforting might help.",
+                ],
+                anxious: [
+                    "Anxiety is challenging. Try grounding techniques: focus on 5 things you see, 4 you hear, 3 you touch, 2 you smell, 1 you taste.",
+                    "When anxious, deep breathing helps. Breathe in for 4 counts, hold for 4, exhale for 4.",
+                    "Your anxiety is valid. Progressive muscle relaxation or meditation can help calm your mind.",
+                ],
+                stressed: [
+                    "High stress detected. Break tasks into smaller steps and tackle them one at a time.",
+                    "You're stressed. Take a break now. A 10-minute walk or meditation can reset your mind.",
+                    "Stress management is crucial. Prioritize, delegate if possible, and practice self-care.",
+                ]
+            };
+
+            const moodSuggestions = suggestions[mood] || suggestions.neutral;
+            const baseSuggestion = moodSuggestions[Math.floor(Math.random() * moodSuggestions.length)];
+
+            // Add stress-based additional advice
+            let additionalAdvice = '';
+            if (stress > 70) {
+                additionalAdvice = ' Consider setting boundaries and asking for help if needed.';
+            } else if (stress > 50) {
+                additionalAdvice = ' Take regular breaks and stay hydrated throughout your day.';
+            } else {
+                additionalAdvice = ' Keep maintaining your current positive approach!';
+            }
+
+            return baseSuggestion + additionalAdvice;
+        }
+
+        // Prevent form submission on Enter in textarea
+        dayInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                form.dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+</body>
+</html>
