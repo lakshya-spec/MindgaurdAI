@@ -1,463 +1,259 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MindGuard - Mental Health Companion</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 500px;
-            width: 100%;
-            padding: 40px;
-            animation: slideUp 0.5s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        h1 {
-            color: #333;
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-
-        .subtitle {
-            color: #999;
-            font-size: 14px;
-        }
-
-        .section-title {
-            color: #333;
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            margin-top: 25px;
-        }
-
-        .mood-selector {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
-            margin-bottom: 30px;
-        }
-
-        .mood-btn {
-            background: #f5f5f5;
-            border: 2px solid transparent;
-            border-radius: 15px;
-            padding: 15px;
-            font-size: 32px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .mood-btn:hover {
-            transform: scale(1.1);
-            background: #efefef;
-        }
-
-        .mood-btn.selected {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-color: #667eea;
-            transform: scale(1.15);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .input-group {
-            margin-bottom: 25px;
-        }
-
-        textarea {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 14px;
-            resize: vertical;
-            min-height: 100px;
-            transition: border-color 0.3s ease;
-            color: #333;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .submit-btn:active {
-            transform: translateY(0);
-        }
-
-        .submit-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .result-section {
-            display: none;
-            margin-top: 30px;
-            padding: 25px;
-            background: #f8f9ff;
-            border-radius: 15px;
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        .result-section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .result-title {
-            color: #667eea;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .result-item {
-            margin-bottom: 15px;
-        }
-
-        .result-label {
-            color: #666;
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 5px;
-        }
-
-        .result-value {
-            color: #333;
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        .mood-display {
-            text-align: center;
-            font-size: 48px;
-            margin: 10px 0;
-        }
-
-        .stress-bar {
-            width: 100%;
-            height: 8px;
-            background: #e0e0e0;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 8px;
-        }
-
-        .stress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            border-radius: 4px;
-            transition: width 0.5s ease;
-        }
-
-        .suggestion-box {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
-            border-left: 4px solid #667eea;
-        }
-
-        .suggestion-box p {
-            color: #333;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .clear-btn {
-            width: 100%;
-            padding: 12px;
-            background: #f0f0f0;
-            color: #333;
-            border: none;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .clear-btn:hover {
-            background: #e0e0e0;
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 25px;
-            }
-
-            h1 {
-                font-size: 24px;
-            }
-
-            .mood-selector {
-                grid-template-columns: repeat(5, 1fr);
-                gap: 10px;
-            }
-
-            .mood-btn {
-                padding: 12px;
-                font-size: 28px;
-            }
-
-            textarea {
-                min-height: 80px;
-                font-size: 13px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MindGuard AI — Your private companion for emotional well-being</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🧠 MindGuard</h1>
-            <p class="subtitle">Your daily mental health companion</p>
-        </header>
 
-        <form id="moodForm">
-            <div>
-                <p class="section-title">How are you feeling?</p>
-                <div class="mood-selector">
-                    <button type="button" class="mood-btn" data-mood="happy" data-stress="20" title="Happy">😊</button>
-                    <button type="button" class="mood-btn" data-mood="neutral" data-stress="40" title="Neutral">😐</button>
-                    <button type="button" class="mood-btn" data-mood="sad" data-stress="60" title="Sad">😢</button>
-                    <button type="button" class="mood-btn" data-mood="anxious" data-stress="75" title="Anxious">😰</button>
-                    <button type="button" class="mood-btn" data-mood="stressed" data-stress="90" title="Stressed">😫</button>
-                </div>
-            </div>
 
-            <div class="input-group">
-                <p class="section-title">Tell me about your day</p>
-                <textarea 
-                    id="dayInput" 
-                    placeholder="Share what's on your mind... This helps me understand your situation better."
-                    required
-                ></textarea>
-            </div>
+<div class="app" id="app">
 
-            <button type="submit" class="submit-btn" id="submitBtn">Get Suggestion</button>
-        </form>
+  <!-- ===================== LANDING SCREEN ===================== -->
+  <section class="screen active" id="screen-landing">
+    <div class="landing">
+      <div class="orb-wrap floating">
+        <div class="orb-ring"></div>
+        <div class="orb"></div>
+        <div class="logo-mark">🛡️</div>
+      </div>
+      <h1 class="app-name">MindGuard AI</h1>
+      <p class="tagline">Your private AI companion for emotional well-being.</p>
+      <button class="btn btn-primary" onclick="goTo('home')">Start Journaling</button>
+      <div class="landing-badges">
+        <span class="badge"><span class="dot"></span> Works fully offline</span>
+        <span class="badge"><span class="dot"></span> Nothing leaves your device</span>
+      </div>
+    </div>
+  </section>
 
-        <div class="result-section" id="resultSection">
-            <div class="result-title">Your Mental Health Overview</div>
-
-            <div class="result-item">
-                <div class="result-label">Current Mood</div>
-                <div class="mood-display" id="moodEmoji">😊</div>
-            </div>
-
-            <div class="result-item">
-                <div class="result-label">Stress Level</div>
-                <div class="stress-bar">
-                    <div class="stress-fill" id="stressFill"></div>
-                </div>
-                <div class="result-value" id="stressText">20%</div>
-            </div>
-
-            <div class="result-item">
-                <div class="result-label">Personalized Suggestion</div>
-                <div class="suggestion-box">
-                    <p id="suggestionText"></p>
-                </div>
-            </div>
-
-            <button type="button" class="clear-btn" id="clearBtn">Start Over</button>
-        </div>
+  <!-- ===================== HOME / JOURNAL SCREEN ===================== -->
+  <section class="screen" id="screen-home">
+    <div class="topbar">
+      <div>
+        <h1>Hi there 👋</h1>
+        <div class="greet-sub">How are you feeling today?</div>
+      </div>
+      <div class="privacy-pill"><span class="dot"></span> Offline</div>
     </div>
 
-    <script>
-        const moodButtons = document.querySelectorAll('.mood-btn');
-        const dayInput = document.getElementById('dayInput');
-        const submitBtn = document.getElementById('submitBtn');
-        const resultSection = document.getElementById('resultSection');
-        const moodEmoji = document.getElementById('moodEmoji');
-        const stressFill = document.getElementById('stressFill');
-        const stressText = document.getElementById('stressText');
-        const suggestionText = document.getElementById('suggestionText');
-        const clearBtn = document.getElementById('clearBtn');
-        const form = document.getElementById('moodForm');
+    <div class="card floating">
+      <div class="card-title">Journal</div>
+      <div class="card-sub">Write freely — this stays only on your device.</div>
+      <textarea class="journal-area" id="journalInput" maxlength="1200"
+        placeholder="How are you feeling today? Write anything that's on your mind..."
+        oninput="updateCharCount()"></textarea>
+      <div class="journal-meta">
+        <span id="charCount">0 / 1200</span>
+        <span id="wordCount">0 words</span>
+      </div>
+      <button class="btn btn-primary btn-block section-gap" onclick="analyzeEmotion()" id="analyzeBtn">
+        Analyze Emotion
+      </button>
+    </div>
 
-        let selectedMood = null;
-        let selectedStress = null;
+    <!-- Emotion Result -->
+    <div class="card hidden" id="emotionResultCard">
+      <div class="emotion-hero">
+        <div class="emotion-emoji" id="emotionEmoji">😊</div>
+        <div style="flex:1;">
+          <div class="emotion-label" id="emotionLabel">Happy</div>
+          <div class="confidence-row">
+            <div class="confidence-bar"><div class="confidence-fill" id="confidenceFill"></div></div>
+            <span class="confidence-num" id="confidenceNum">0%</span>
+          </div>
+        </div>
+      </div>
+      <p class="emotion-explain" id="emotionExplain">—</p>
+      <button class="btn btn-ghost btn-sm section-gap" id="saveMemoryBtn" onclick="saveCurrentAsMemory()">
+        ❤️ Save as Happy Memory
+      </button>
+    </div>
 
-        // Mood selection logic
-        moodButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                moodButtons.forEach(b => b.classList.remove('selected'));
-                btn.classList.add('selected');
-                
-                selectedMood = btn.dataset.mood;
-                selectedStress = parseInt(btn.dataset.stress);
-                moodEmoji.textContent = btn.textContent;
-            });
-        });
+    <!-- Suggestions -->
+    <div class="card hidden" id="suggestionsCard">
+      <div class="card-title">Mood Suggestions</div>
+      <div class="card-sub">Small things that might help right now.</div>
+      <div class="grid-2" id="suggestionsGrid"></div>
+      <a class="link-more" onclick="showMoreSuggestions()">Show More Suggestions</a>
+    </div>
+  </section>
 
-        // Form submission
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
+  <!-- ===================== MEMORIES SCREEN ===================== -->
+  <section class="screen" id="screen-memories">
+    <div class="topbar">
+      <div>
+        <h1>❤️ Saved Memories</h1>
+        <div class="greet-sub">Moments worth holding onto.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Save Happy Memory</div>
+      <div class="card-sub">Your saved happy journal entries live here, private and just for you.</div>
+      <div class="memory-list" id="memoryList"></div>
+    </div>
+  </section>
 
-            if (!selectedMood) {
-                alert('Please select a mood first!');
-                return;
-            }
+  <!-- ===================== FLASHBACKS SCREEN ===================== -->
+  <section class="screen" id="screen-flashbacks">
+    <div class="topbar">
+      <div>
+        <h1>🔄 Flashbacks</h1>
+        <div class="greet-sub">A little reminder of brighter days.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Need a Smile?</div>
+      <div class="card-sub">We'll surface a happy memory at random.</div>
+      <div class="flashback-stage" id="flashbackStage">
+        <div class="empty-state" id="flashbackEmpty">
+          <span class="empty-emoji">❤️</span>
+          <span class="empty-text">Your happy memories will appear here ❤️</span>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block section-gap" onclick="showHappyMemory()">Show Happy Memory</button>
+      <div class="flashback-controls">
+        <button class="btn-icon" id="fbPrev" onclick="flashbackNav(-1)" title="Previous">⟵</button>
+        <button class="btn-icon" id="fbFav" onclick="flashbackFavorite()" title="Favorite">🤍</button>
+        <button class="btn-icon" id="fbShare" disabled title="Share (coming soon)">↗</button>
+        <button class="btn-icon" id="fbNext" onclick="flashbackNav(1)" title="Next">⟶</button>
+      </div>
+    </div>
+  </section>
 
-            const dayText = dayInput.value.trim();
-            if (!dayText) {
-                alert('Please tell me about your day!');
-                return;
-            }
+  <!-- ===================== REMINDERS SCREEN ===================== -->
+  <section class="screen" id="screen-reminders">
+    <div class="topbar">
+      <div>
+        <h1>⏰ Reminders</h1>
+        <div class="greet-sub">Gentle nudges to check in with yourself.</div>
+      </div>
+    </div>
 
-            // Update results
-            stressFill.style.width = selectedStress + '%';
-            stressText.textContent = selectedStress + '%';
+    <div class="card">
+      <div class="card-title">Add Reminder</div>
+      <div class="card-sub">A soft prompt, on your schedule.</div>
+      <div class="field">
+        <label for="remMsg">Reminder message</label>
+        <input type="text" id="remMsg" placeholder="e.g. Take a mindful breathing break">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="remDate">Date</label>
+          <input type="date" id="remDate">
+        </div>
+        <div class="field">
+          <label for="remTime">Time</label>
+          <input type="time" id="remTime">
+        </div>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-row-label">Enable notification</span>
+        <label class="switch">
+          <input type="checkbox" id="remNotify" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+      <button class="btn btn-primary btn-block section-gap" onclick="addReminder()">Add reminder</button>
+    </div>
 
-            const suggestion = generateSuggestion(selectedMood, selectedStress, dayText);
-            suggestionText.textContent = suggestion;
+    <div class="card section-gap">
+      <div class="card-title">Upcoming</div>
+      <div class="reminder-list" id="reminderList"></div>
+    </div>
+  </section>
 
-            // Show result section
-            resultSection.classList.add('active');
-            resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        });
+  <!-- ===================== SETTINGS SCREEN ===================== -->
+  <section class="screen" id="screen-settings">
+    <div class="topbar">
+      <div>
+        <h1>⚙️ Settings</h1>
+        <div class="greet-sub">Make MindGuard feel like yours.</div>
+      </div>
+    </div>
 
-        // Clear button
-        clearBtn.addEventListener('click', () => {
-            form.reset();
-            moodButtons.forEach(btn => btn.classList.remove('selected'));
-            dayInput.value = '';
-            resultSection.classList.remove('active');
-            selectedMood = null;
-            selectedStress = null;
-            moodEmoji.textContent = '😊';
-        });
+    <div class="card">
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">Dark mode</div>
+          <div class="setting-desc">Easier on the eyes at night.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">Notifications</div>
+          <div class="setting-desc">Reminder alerts on this device.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="notifToggle" checked onchange="toast(this.checked ? 'Notifications enabled' : 'Notifications disabled')">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">Privacy mode</div>
+          <div class="setting-desc">Blur journal previews on the memories screen.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="privacyToggle" onchange="togglePrivacyMode()">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
 
-        // Suggestion generation based on mood and input
-        function generateSuggestion(mood, stress, text) {
-            const suggestions = {
-                happy: [
-                    "Great to hear you're feeling happy! Keep up the positive energy by sharing your joy with others.",
-                    "You're in a wonderful mood! This is a perfect time to tackle challenging tasks and help others.",
-                    "Wonderful! Channel this happiness into creative projects or spend quality time with loved ones.",
-                ],
-                neutral: [
-                    "You're feeling neutral. Take a moment to reflect on what could brighten your day.",
-                    "It's okay to feel neutral. Try something new or reconnect with an old hobby.",
-                    "Neutral moods are perfect for self-reflection. What's one small thing that could improve your day?",
-                ],
-                sad: [
-                    "I sense sadness. Remember that it's okay to feel this way. Consider reaching out to someone you trust.",
-                    "Sadness is a natural emotion. Try gentle self-care like a warm bath, journaling, or a walk in nature.",
-                    "It's important to acknowledge your sadness. Speaking with someone or doing something comforting might help.",
-                ],
-                anxious: [
-                    "Anxiety is challenging. Try grounding techniques: focus on 5 things you see, 4 you hear, 3 you touch, 2 you smell, 1 you taste.",
-                    "When anxious, deep breathing helps. Breathe in for 4 counts, hold for 4, exhale for 4.",
-                    "Your anxiety is valid. Progressive muscle relaxation or meditation can help calm your mind.",
-                ],
-                stressed: [
-                    "High stress detected. Break tasks into smaller steps and tackle them one at a time.",
-                    "You're stressed. Take a break now. A 10-minute walk or meditation can reset your mind.",
-                    "Stress management is crucial. Prioritize, delegate if possible, and practice self-care.",
-                ]
-            };
+    <div class="card section-gap">
+      <div class="setting-row" style="border-bottom:none;">
+        <div>
+          <div class="setting-label">Offline mode</div>
+          <div class="setting-desc">All analysis runs on-device. No data leaves your phone.</div>
+        </div>
+        <div class="status-dot-row"><span class="status-dot"></span> Active</div>
+      </div>
+    </div>
 
-            const moodSuggestions = suggestions[mood] || suggestions.neutral;
-            const baseSuggestion = moodSuggestions[Math.floor(Math.random() * moodSuggestions.length)];
+    <div class="card section-gap">
+      <div class="card-title">About MindGuard AI</div>
+      <p class="emotion-explain" style="margin-top:0;">
+        MindGuard AI is an offline-first emotional well-being companion. Journal entries are analyzed
+        on-device for emotional tone, with suggestions tailored to how you're feeling. Version 1.0.0 (UI preview) —
+        built to later connect to an on-device AI model and a local SQLite database, so your reflections
+        never have to leave your device.
+      </p>
+    </div>
+  </section>
 
-            // Add stress-based additional advice
-            let additionalAdvice = '';
-            if (stress > 70) {
-                additionalAdvice = ' Consider setting boundaries and asking for help if needed.';
-            } else if (stress > 50) {
-                additionalAdvice = ' Take regular breaks and stay hydrated throughout your day.';
-            } else {
-                additionalAdvice = ' Keep maintaining your current positive approach!';
-            }
+</div>
 
-            return baseSuggestion + additionalAdvice;
-        }
+<!-- ===================== BOTTOM NAV ===================== -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <button class="nav-item active" data-screen="home" onclick="goTo('home')">
+      <span class="nav-icon">🏠</span><span>Home</span>
+    </button>
+    <button class="nav-item" data-screen="memories" onclick="goTo('memories')">
+      <span class="nav-icon">❤️</span><span>Memories</span>
+    </button>
+    <button class="nav-item" data-screen="flashbacks" onclick="goTo('flashbacks')">
+      <span class="nav-icon">🔄</span><span>Flashbacks</span>
+    </button>
+    <button class="nav-item" data-screen="reminders" onclick="goTo('reminders')">
+      <span class="nav-icon">⏰</span><span>Reminders</span>
+    </button>
+    <button class="nav-item" data-screen="settings" onclick="goTo('settings')">
+      <span class="nav-icon">⚙️</span><span>Settings</span>
+    </button>
+  </div>
+</nav>
 
-        // Prevent form submission on Enter in textarea
-        dayInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && e.ctrlKey) {
-                form.dispatchEvent(new Event('submit'));
-            }
-        });
-    </script>
+<div class="toast" id="toast"></div>
+<script src="script.js"></script>
 </body>
 </html>
