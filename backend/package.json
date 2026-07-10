@@ -1,0 +1,45 @@
+{
+  "name": "mindguard-ai-backend",
+  "version": "2.0.0",
+  "description": "On-device AI backend for MindGuard AI (OSDHack 2026) — Transformers.js emotion classification (pretrained DistilRoBERTa model, ONNX Runtime Web), suggestion engine, browser notification scheduling, and a real IndexedDB-based database layer for users, journal entries, emotion logs, memories, and reminders.",
+  "type": "module",
+  "main": "backendManager.js",
+  "exports": {
+    ".": "./backendManager.js"
+  },
+  "files": [
+    "backendManager.js",
+    "emotionClassifier.js",
+    "modelLoader.js",
+    "suggestionManager.js",
+    "notificationHelper.js",
+    "indexedDB.js",
+    "constants.js",
+    "emotionEnum.js",
+    "emotionResult.js",
+    "utils.js",
+    "logger.js",
+    "README.md"
+  ],
+  "keywords": [
+    "on-device-ai",
+    "transformers.js",
+    "onnx-runtime-web",
+    "emotion-detection",
+    "offline-first",
+    "osdhack"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "peerDependencies": {
+    "@huggingface/transformers": "^3.8.1"
+  },
+  "peerDependenciesMeta": {
+    "@huggingface/transformers": {
+      "optional": false
+    }
+  },
+  "browser": true,
+  "notes": "This package has no npm dependency on @huggingface/transformers by design — modelLoader.js imports it directly from a pinned jsDelivr CDN URL as a native ES module (see TRANSFORMERS_JS_CDN_URL in constants.js), so no bundler or npm install step is required. peerDependencies documents the expected version only; it is not installed by a package manager."
+}
