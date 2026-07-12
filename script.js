@@ -12,7 +12,7 @@
  * ---------------------------------------------------------------------------
  */
 
-import * as backend from "./backendManager.js";
+import * as backend from "./backend/backendManager.js";
 
 /* =========================================================
    STATE
