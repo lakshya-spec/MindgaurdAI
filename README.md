@@ -2,12 +2,6 @@
 
 > An on-device AI powered mental wellness companion that analyzes emotions locally, protects user privacy, and helps users reflect through journaling, happy memories, and reminders.
 
-<p align="center">
-  <img src="screenshots/home.png" alt="MindGuard AI" width="800"/>
-</p>
-
----
-
 # 📖 Problem Statement
 
 Many mental health applications rely on cloud-based AI services, requiring users to upload deeply personal journal entries and emotions to remote servers. This raises concerns about:
@@ -274,13 +268,13 @@ Frontend Developer
 
 ---
 
-### Team Member 2
+### Vaishnavi Sharma
 
 Backend Developer
 
 ---
 
-### Team Member 3
+### Tanu Teotia
 
 Database Developer
 
