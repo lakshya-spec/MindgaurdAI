@@ -264,19 +264,19 @@ or simply open using **Live Server**.
 
 ### Lakshya Srivastava
 
-Frontend Developer
+Frontend Developer(https://github.com/lakshya-spec)
 
 ---
 
 ### Vaishnavi Sharma
 
-Backend Developer
+Backend Developer(https://github.com/vaishnavisharma9219-prog)
 
 ---
 
 ### Tanu Teotia
 
-Database Developer
+Database Developer(http://github.com/tanuteotia2007-commits)
 
 ---
 
